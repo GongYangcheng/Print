@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginBottom="@dimen/dp5"
-        android:text="login" />
+        android:text="html" />
 
     <Button
         android:id="@+id/button2"

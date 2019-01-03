@@ -1,44 +1,50 @@
 package com.xuanhuai.print.utils;
 
+import java.util.regex.Pattern;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DollarTransform {
-
 //	public static void main(String[] args) {
-//		String text = "<p style=\"line_height:10px;\"></p>"+
-//				"<label style=\"margin-left:50px;font-size:24px;font-weight:bold;\">单号：</label>"+
-//				"<label barcode=\"CODE128\" style=\"barheight:60;text-align:center\">$order_id$</label>"+
-//				"<p style=\"line_height:63px;\">"+
-//				"<label style=\"width:55%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;\">"+
-//				"日期：$print_time$</label>" +
-//				"<label style=\"width:45%;text-align:left;font-size:24px;font-weight:bold;\">" +
-//				"托盘：$total_container$-$current_container$</label></p>";
-//
-////		JSONObject jsonObj = new JsonObject();
-//		DollarTransform d= new DollarTransform();
-//
-//		JSONObject obj;
-//		try {
-//			obj = new JSONObject(json);
-//			String test = d.test(text,obj);
-//			System.out.println(test);
-//			String s = "123456789";
-////			System.out.println(s.substring(1,s.length()-1));
-//		} catch (JSONException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//		String s = "sunnyGong";
+//		System.out.println(s.indexOf("n"));
 //
 //	}
 
-	public static String test(String text,JSONObject obj){
+	/**
+	 *
+	 * @param text html内容
+	 * @param obj JSon对象
+	 * @return
+	 */
+	public static String dollarTransform(String text,JSONObject obj){
+
 		for (int i = 0; i < dollarCode.length; i++) {
 			if (text.contains(dollarCode[i])) {
 				try {
-					if (obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)) != null) {
-						text = text.replace(dollarCode[i], obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)).toString());
-					}
+					if (text.substring((text.indexOf(dollarCode[i])-9),
+							(text.indexOf(dollarCode[i])+dollarCode[i].length()+2))
+							.equals("##CUT 0##"+dollarCode[i]+"##")) {
+						if (obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)) != null) {
+							text = text.replace("##CUT 0##"+dollarCode[i]+"##",
+									obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)).
+											toString().split(" ")[0]);
+							i = i-1;
+						}
+					}else if (text.substring((text.indexOf(dollarCode[i])-9),
+							(text.indexOf(dollarCode[i])+dollarCode[i].length()+2))
+							.equals("##CUT 1##"+dollarCode[i]+"##")) {
+						if (obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)) != null) {
+							text = text.replace("##CUT 1##"+dollarCode[i]+"##",
+									obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)).toString().split(" ")[1]);
+							i = i-1;
+						}
+					}else {
+						if (obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)) != null) {
+							text = text.replace(dollarCode[i], obj.get(dollarCode[i].substring(1,dollarCode[i].length()-1)).toString());
+						}
+					};
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -47,13 +53,30 @@ public class DollarTransform {
 		}
 		return text;
 	}
+	
+	// 判断是数字或字母
+		public static boolean isNumericOrLetter(String str) {
+			Pattern pattern = Pattern.compile("[0-9]*");
+			char c = str.charAt(0);
+			int i = (int) c;
+			if (pattern.matcher(str).matches()) {
+				return true;
+			}else {
+				if ((i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+//		测试json
 	public static String json = "{ \"order_id\":56700, \"employee_no\":123 ,"+
 			"\"user_name\":\"张三\",\"crate_no\":1,\"customer_name\":\"李四\",\"customer_id\":\"234\",\"customer_address\":\"南京市\"," +
 			"\"customer_phone\":13735895468,\"transport_route\":\"京广线\",\"target_finish_time\":\"2018-01-02\","+
 			"\"message\":\"提示信息\",\"loading_warehouse\":\"2018-02-02\",\"total_quantity\":\"20\",\"total_quantity_xiang\":\"20\","+
 			"\"total_quantity_jian\":\"20\",\"quantity\":\"10\",\"next_location\":\"出货道\",\"total_container\":\"30\","+
 			"\"current_container\":\"2\",\"end_time\":\"2018-03-03\",\"print_time\":\"2018-04-04\",\"product_name\":\"2018-05-05\","+
-			"\"product_name_simplify\":\"品名简称\",\"brand\":\"大宝\",\"type\":\"ZT-01\"}";
+			"\"product_name\":\"标准气缸 DSBC-40-25-PPVA-N3\",\"brand\":\"大宝\",\"type\":\"ZT-01\"}";
 
 	public static String[] dollarCode = { "$order_id$", "$employee_no$",
 			"$user_name$", "$crate_no$", "$customer_name$", "$customer_id$",
@@ -73,16 +96,18 @@ public class DollarTransform {
 	
 //	<p style="line_height:10px;">
 //	</p>
-//	<label style="margin-left:50px;font-size:24px;font-weight:bold;">单号：</label><label barcode="CODE128" style="barheight:60;text-align:center">9876543210</label>
-//	<label style="width:100%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">门店：杭州嘉里中心丼丼屋</label>
+//	<label style="margin-left:50px;font-size:24px;font-weight:bold;">单号：</label>
+//	<label barcode="CODE128" style="barheight:60;text-align:center">##CUT 0##$order_id$##</label>
+//	<label style="width:100%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">门店：$customer_name$</label>
 //	<p style="line_height:63px;">
-//	<label style="width:55%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">数量：共 3 箱 4 件 </label><label style="width:45%;font-size:24px;text-align:left;font-weight:bold;">路线：路线一</label>
+//	<label style="width:55%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">数量：共 $total_quantity_xiang$ 箱 $total_quantity_jian$ 件 </label><label style="width:45%;font-size:24px;text-align:left;font-weight:bold;">路线：$transport_route$</label>
 //	</p>
 //	<p style="line_height:63px;">
-//	<label style="width:100%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">备注：生鲜冷冻商品</label>
+//	<label style="width:100%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">备注：$remark$</label>
 //	</p>
 //	<p style="line_height:63px;">
-//	<label style="width:55%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">日期：2018-12-10</label><label style="width:45%;text-align:left;font-size:24px;font-weight:bold;">托盘：15-2</label>
+//	<label style="width:55%;margin-left:50px;font-size:24px;text-align:left;font-weight:bold;">日期：$print_time$</label><label style="width:45%;text-align:left;font-size:24px;font-weight:bold;">托盘：$total_container$-$current_container$</label>
 //	</p>
+
 
 }

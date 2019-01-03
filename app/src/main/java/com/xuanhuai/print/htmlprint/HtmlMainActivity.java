@@ -247,7 +247,7 @@ public class HtmlMainActivity extends AppCompatActivity {
             }else{
                 jsonObject = new JSONObject(edt_json_input.getText().toString().trim());
             }
-            printContent = DollarTransform.test(printContent,jsonObject);
+            printContent = DollarTransform.dollarTransform(printContent,jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
             CustomToast.showToast(mContext,"JSON错误："+e.toString());

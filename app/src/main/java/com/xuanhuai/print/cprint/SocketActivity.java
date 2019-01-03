@@ -18,6 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xuanhuai.print.R;
+import com.xuanhuai.print.utils.DollarTransform;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,17 +103,34 @@ public class SocketActivity extends Activity {
 	public void connected(View v){
 		
 	}
-	String infoss = "! 0 200 200 400 1\r\nPAGE-WIDTH 200\r\n" +"GAP-SENSE\r\n"+
-			"TEXT 4 0 30 40 Hello World\r\n"+
-			"FORM\r\n"+
-			"PRINT\r\n";
+	String infoss = "! 0 200 200 400 1\r\n" +
+        "PAGE-WIDTH 600\r\n" +
+        "GAP-SENSE\r\n" +
+        "SETMAG 1 2\r\n" +
+        "TEXT 14 6 50 60 物料号：\r\n" +
+        "TEXT 14 6 160 60 1234232\r\n" +
+        "TEXT 14 6 50 150 物料描述：\r\n" +
+        "TEXT 14 6 180 150 消声器\r\n" +
+        "TEXT 14 6 180 200 DS-UI-09-7887\r\n" +
+        "TEXT 14 6 50 290 交货量：\r\n" +
+        "TEXT 14 6 160 290 20件\r\n" +
+        "FORM\r\n" +
+        "PRINT\r\n";
 	public void sendMsg(View v){
 		String info=infoEdit.getText().toString();
+
 		sendMessage(info);
 	}
-	public void sendMsgTest(View v){
-		sendMessage(infoss);
-	}
+//	public void sendMsgTest(View v){
+//	让他们做测试用的
+//		String s = "";
+//		try {
+//			s = DollarTransform.dollarTransform(infoss, new JSONObject(DollarTransform.json));
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		sendMessage(s);
+//	}
 	int printTimes = 1;
 	int ii = 1;
 	/**
@@ -135,7 +156,6 @@ public class SocketActivity extends Activity {
 				sendMessage(msg);
 			}
 			
-//			Toast.makeText(getApplicationContext(), "发送:"+msg, Toast.LENGTH_SHORT).show();
 		} catch (IOException e) {
 			e.printStackTrace();
 			Toast.makeText(getApplicationContext(), "发送失败", Toast.LENGTH_SHORT).show();
