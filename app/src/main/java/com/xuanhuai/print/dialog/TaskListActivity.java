@@ -29,7 +29,7 @@ public class TaskListActivity extends AppCompatActivity {
 
     private static final String TAG = "TaskListActivity";
     private HorizontalListView listView;
-    private NoScrollViewPager  viewPager;
+    private ViewPager  viewPager;
     private Context mContext;
     private PagerAdapter pagerAdapter;
     private List<String> arrayList;
