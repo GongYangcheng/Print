@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.xuanhuai.print.cprint.SeachBluetooth;
+import com.xuanhuai.print.dialog.TaskListActivity;
 import com.xuanhuai.print.htmlprint.HtmlMainActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button1:
                 startActivity(new Intent(this, HtmlMainActivity.class));
+                break;
+            case R.id.button3:
+                startActivity(new Intent(this, TaskListActivity.class));
                 break;
             default:
                 break;
