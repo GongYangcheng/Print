@@ -93,7 +93,7 @@ public class TaskListActivity extends AppCompatActivity {
 //        模拟Viewpager内部的数据；
         for (int i = 0 ; i < 18 ; i++ ){
             baseArrayList.add(new Moudle("1","1","2564852"
-            ,"25/36","紧急","2018-06-12","1"));
+            ,"25/36","紧急","2             018-06-12","1"));
         }
     }
 
