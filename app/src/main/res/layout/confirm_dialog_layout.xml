@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_circular_bg"
+    android:paddingHorizontal="@dimen/dp5"
+    android:paddingVertical="@dimen/dp10"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:text="发起群聊"
+            android:textColor="@color/whiteFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/whiteFFF"
+            android:text="添加好友"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

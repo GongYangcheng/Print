@@ -9,4 +9,8 @@
     <dimen name="dp7">7dp</dimen>
     <dimen name="dp1">1dp</dimen>
     <dimen name="dp3">3dp</dimen>
+    <dimen name="dp30">30dp</dimen>
+    <dimen name="dp15">15dp</dimen>
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="sp18">18sp</dimen>
 </resources>

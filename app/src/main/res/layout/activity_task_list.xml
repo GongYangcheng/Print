@@ -3,92 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#5F5F5F"
+    android:layout_height="480dp"
+    android:background="@drawable/free_dialog_bg"
     tools:context=".dialog.TaskListActivity">
 
+    <include layout="@layout/dialog_toolbar_layout"/>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dp30"-->
+        <!--android:layout_marginTop="@dimen/dp20"-->
+        <!--android:paddingHorizontal="@dimen/dp10"-->
+        <!--android:layout_marginHorizontal="@dimen/dp20"-->
+        <!--android:orientation="horizontal">-->
+        <!---->
+    <!--</LinearLayout>-->
     <com.xuanhuai.print.dialog.HorizontalListView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:id="@+id/lv_btn_list"
         android:layout_gravity="center_vertical"
         android:paddingHorizontal="@dimen/dp10"
-        android:background="@drawable/rectangle_circular_bg"
         android:layout_marginHorizontal="@dimen/dp20"
-        android:layout_marginTop="@dimen/dp20"
-        android:layout_marginBottom="@dimen/dp10"/>
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:paddingHorizontal="@dimen/dp10">-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/btn_common_task"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_marginHorizontal="@dimen/dp10"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:text="普通任务"-->
-                <!--android:textColor="#000000"-->
-                <!--android:textSize="@dimen/sp20"-->
-                <!--android:visibility="visible" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/btn_wellen_task"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_marginRight="@dimen/dp10"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:text="波次任务"-->
-                <!--android:textSize="@dimen/sp20"-->
-                <!--android:textColor="#000000"-->
-                <!--android:visibility="visible" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/btn_unopened"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:text="手工合任务"-->
-                <!--android:textSize="@dimen/sp20"-->
-                <!--android:textColor="#000000"-->
-                <!--android:visibility="visible" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/btn_opened"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:textSize="@dimen/sp20"-->
-                <!--android:layout_marginRight="@dimen/dp10"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:text="智能合任务"-->
-                <!--android:textColor="#000000"-->
-                <!--android:visibility="visible" />-->
-
-        <!--</LinearLayout>-->
-    <!--</ScrollView>-->
-    <!--<ListView-->
-        <!--android:id="@+id/list_task"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:layout_marginHorizontal="@dimen/dp20"-->
-        <!--android:descendantFocusability="beforeDescendants"-->
-        <!--android:layout_marginBottom="@dimen/dp20" />-->
-    <android.support.v4.view.ViewPager
+        android:layout_marginVertical="@dimen/dp10"/>
+    <ListView
+        android:paddingVertical="@dimen/dp5"
+        android:id="@+id/list_tasks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:listSelector="@android:color/transparent"
+        android:divider="#fff"
+        android:dividerHeight="1px"
         android:layout_marginHorizontal="@dimen/dp20"
-        android:descendantFocusability="beforeDescendants"
-        android:layout_marginBottom="@dimen/dp20"
-        android:id="@+id/view_pager" />
+        android:layout_marginBottom="@dimen/dp20" />
 </LinearLayout>
