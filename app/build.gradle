@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
-
+//19
     defaultConfig {
         applicationId "com.xuanhuai.print"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 3
         versionName "1.2"

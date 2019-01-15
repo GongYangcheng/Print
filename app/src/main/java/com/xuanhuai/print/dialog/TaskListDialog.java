@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.xuanhuai.print.R;
 import com.xuanhuai.print.utils.CustomToast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 //
@@ -31,6 +33,7 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
     private List<Moudle> baseArrayList;
     private MyBaseAdapter myBaseAdapter;
     private int indexPosition = 0;
+    private int clickPosition = 0;
     private ListView pagerListView;
     private TaskListDialog taskListDialog;
 
@@ -120,10 +123,8 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
 //                  单击-> 进入下个dialog
                     lastClickTime = time;
                     taskListDialog.dismiss();
-
                     CustomToast.showToastTest(mContext, "点击" + position + "条目");
                 }
-
             }
         });
         pagerListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -164,9 +165,25 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
     class MyBaseAdapter extends BaseAdapter {
 
         int pagerPosition;
+        // 用来控制CheckBox的选中状况
+        private HashMap<Integer, Boolean> isSelected;
 
         public MyBaseAdapter(int position) {
             this.pagerPosition = position;
+            isSelected = new HashMap<Integer, Boolean>();
+            initHashMap();
+        }
+
+        private void initHashMap() {
+            for (int i = 0; i < baseArrayList.size(); i++) {
+                getIsSelected().put(i, false);
+            }
+        }
+        public HashMap<Integer, Boolean> getIsSelected() {
+            return isSelected;
+        }
+        public void setIsSelected(HashMap<Integer, Boolean> isSelected) {
+            myBaseAdapter.isSelected = isSelected;
         }
 
         @Override
@@ -186,11 +203,11 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            MyBaseAdapter.ViewHolder vh = null;
+            ViewHolder vh = null;
             pagerPosition = indexPosition;
             if (convertView == null) {
-                vh = new MyBaseAdapter.ViewHolder();
                 convertView = View.inflate(mContext, R.layout.item_list_four_layout, null);
+                vh = new MyBaseAdapter.ViewHolder();
                 vh.ck_select = convertView.findViewById(R.id.ck_select);
                 vh.tv_order_num = convertView.findViewById(R.id.tv_order_num);
                 vh.tv_odd_num = convertView.findViewById(R.id.tv_odd_num);
@@ -216,16 +233,26 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
                 vh.ck_select.setChecked(false);
             }
 //            记录选中状态；
-//            if (vh.ck_select.isChecked()){
-//                baseArrayList.get(position).setCk_select("1");
-//            }else{
-//                baseArrayList.get(position).setCk_select("0");
-//            }
             vh.tv_order_num.setText((position + 1) + "");
             vh.tv_odd_num.setText(baseArrayList.get(position).getTv_odd_num());
             vh.tv_complete_rate.setText(baseArrayList.get(position).getTv_complete_rate());
             vh.tv_urgen_sign.setText(baseArrayList.get(position).getTv_urgen_sign());
             vh.tv_project_time.setText(baseArrayList.get(position).getTv_project_time());
+            // 监听checkBox并根据原来的状态来设置新的状态
+            vh.ck_select.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (isSelected.get(position)) {
+                        isSelected.put(position, false);
+                        setIsSelected(isSelected);
+                    } else {
+                        isSelected.put(position, true);
+                        setIsSelected(isSelected);
+                    }
+                }
+            });
+            // 根据isSelected来设置checkbox的选中状况
+            vh.ck_select.setChecked(getIsSelected().get(position));
+
             vh.iv_print.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

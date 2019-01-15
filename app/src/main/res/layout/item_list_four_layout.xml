@@ -11,6 +11,7 @@
         android:layout_height="25dp"
         android:layout_gravity="center"
         android:focusable="false"
+        android:theme="@style/My_CheckBox"
         android:layout_marginHorizontal="@dimen/dp5"
         android:visibility="invisible"/>
     <TextView
