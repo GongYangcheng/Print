@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,7 +34,6 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
     private List<Moudle> baseArrayList;
     private MyBaseAdapter myBaseAdapter;
     private int indexPosition = 0;
-    private int clickPosition = 0;
     private ListView pagerListView;
     private TaskListDialog taskListDialog;
 
@@ -67,7 +67,8 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
         iv_select_menu.setOnClickListener(this);
         tv_toolbar.setText("任务列表");
     }
-
+    MyArrayBaseAdapter adapter;
+    String[] taskTitle;
     private void initView() {
         listView = findViewById(R.id.lv_btn_list);
         pagerListView = findViewById(R.id.list_tasks);
@@ -75,10 +76,8 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
         initBaseData();
         myBaseAdapter = new MyBaseAdapter(indexPosition);//TODO 更改position
         pagerListView.setAdapter(myBaseAdapter);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
-                R.layout.item_simple_layout,
-                R.id.text,
-                new String[]{"普通任务", "波次任务", "手动合任务", "智能合任务"});
+        taskTitle = new String[]{"普通任务", "波次任务", "手动合任务", "智能合任务"};
+        adapter = new MyArrayBaseAdapter();
         listView.setAdapter(adapter);
         listView.post(new Runnable() {
             @Override
@@ -99,20 +98,13 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
                 indexPosition = position;
                 isDisplayCheckBox = false;
                 myBaseAdapter.notifyDataSetChanged();
-                for (int i = 0; i < listView.getChildCount(); i++) {
-                    TextView tv = ((TextView) listView.getChildAt(i).findViewById(R.id.text));
-                    if (i == position) {
-                        tv.setBackgroundResource(R.drawable.rectangle_circular_bg);
-                    } else {
-                        tv.setBackground(null);
-                    }
-                }
+                adapter.setClickPosition(position);
+                adapter.notifyDataSetChanged();
             }
         });
 
         pagerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             long lastClickTime = 0;
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 long time = System.currentTimeMillis();
@@ -146,7 +138,11 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
                     , "25/36", "紧急", "2018-06-12 23:59", "1"));
         }
     }
-
+        String[][] taskContent = {
+            {"合并任务","拆分任务","取消任务","打印标签","查看缺货"},
+            {"取消任务","打印物料","查看缺货"},
+            {"取消任务","拆分任务"},
+            {"取消任务","打印物料","查看缺货","取消任务"}};
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -156,12 +152,65 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
                 break;
             case R.id.iv_select_menu:
 //                小菜单选项 TODO
-                ConfirmPopWindow tld = new ConfirmPopWindow(mContext);
+                final ConfirmPopWindow tld = new ConfirmPopWindow(mContext,taskContent[indexPosition]);
                 tld.showAtBottom(iv_select_menu);
+                tld.setOnItemContextClickListener(new ConfirmPopWindow.onItemContentListener() {
+                    @Override
+                    public void onContentClick(String text) {
+                        CustomToast.showToastTest(mContext,text);
+                        tld.dismiss();
+                    }
+                });
                 break;
         }
     }
+    class MyArrayBaseAdapter extends BaseAdapter {
 
+        int pagerPosition;
+        //给上面变量定义一个有参构造
+        public void setClickPosition(int pagerPosition){
+
+            this.pagerPosition = pagerPosition;
+        }
+        @Override
+        public int getCount() {
+            return taskTitle.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return taskTitle[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder vh = null;
+            if (convertView == null) {
+                convertView = View.inflate(mContext, R.layout.item_simple_layout, null);
+                vh = new ViewHolder();
+                vh.tv_order_num = convertView.findViewById(R.id.text);
+                convertView.setTag(vh);
+            } else {
+                vh = (ViewHolder) convertView.getTag();
+            }
+//            记录选中状态；
+            vh.tv_order_num.setText(taskTitle[position]);
+            if( pagerPosition == position ){
+                vh.tv_order_num.setBackgroundResource(R.drawable.rectangle_circular_bg);
+            }else{
+                vh.tv_order_num.setBackground(null);
+            }
+            return convertView;
+        }
+        class ViewHolder {
+            private TextView tv_order_num;
+        }
+    }
     class MyBaseAdapter extends BaseAdapter {
 
         int pagerPosition;
@@ -200,7 +249,7 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
         public long getItemId(int position) {
             return position;
         }
-
+//合并任务？
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder vh = null;
@@ -273,4 +322,6 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
             private ImageView iv_print;
         }
     }
+
+
 }

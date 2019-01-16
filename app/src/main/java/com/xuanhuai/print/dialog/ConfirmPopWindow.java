@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.graphics.drawable.ColorDrawable;
 import android.util.DisplayMetrics;
@@ -11,30 +14,54 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.xuanhuai.print.R;
+import com.xuanhuai.print.utils.CustomToast;
 
-public class ConfirmPopWindow extends PopupWindow implements View.OnClickListener {
-    private Context context;
-    private View ll_chat, ll_friend;
+public class ConfirmPopWindow extends PopupWindow{
+    private Context mContext;
+    private ListView lv_task_list;
+    public interface onItemContentListener {
+        void onContentClick(String text);
+    }
 
-    public ConfirmPopWindow(Context context) {
+    public onItemContentListener mOnItemContentListener;
+
+    public void setOnItemContextClickListener(onItemContentListener mOnItemContentListener) {
+        this.mOnItemContentListener = mOnItemContentListener;
+    }
+
+
+    String[] taskContent = {"普通任务", "波次任务", "手动合任务", "智能合任务"};
+
+    public ConfirmPopWindow(Context context,String[] taskContent) {
         super(context);
-        this.context = context;
+        this.mContext = context;
+        this.taskContent = taskContent;
+        this.
         initalize();
     }
 
     private void initalize() {
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.confirm_dialog_layout, null);
-        ll_chat = view.findViewById(R.id.ll_chat);//发起群聊
-        ll_friend = view.findViewById(R.id.ll_friend);//添加好友
-        ll_chat.setOnClickListener(this);
-        ll_friend.setOnClickListener(this);
+        lv_task_list = view.findViewById(R.id.lv_task_list);//发起群聊
+//        lv_task_list.setOnClickListener(this);
         setContentView(view);
         initWindow();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
+                R.layout.item_list_five_layout,
+                R.id.tv_task_content,
+                taskContent);
+        lv_task_list.setAdapter(adapter);
+        lv_task_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mOnItemContentListener.onContentClick(taskContent[position]);
+            }
+        });
     }
 
     private void initWindow() {
-        DisplayMetrics d = context.getResources().getDisplayMetrics();
+        DisplayMetrics d = mContext.getResources().getDisplayMetrics();
         this.setWidth((int) (d.widthPixels * 0.35));
         this.setHeight(LayoutParams.WRAP_CONTENT);
         this.setFocusable(true);
@@ -44,11 +71,11 @@ public class ConfirmPopWindow extends PopupWindow implements View.OnClickListene
         ColorDrawable dw = new ColorDrawable(0x00000000);
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
-        backgroundAlpha((Activity) context, 0.8f);//0.0-1.0
+        backgroundAlpha((Activity) mContext, 0.8f);//0.0-1.0
         this.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss() {
-                backgroundAlpha((Activity) context, 1f);
+                backgroundAlpha((Activity) mContext, 1f);
             }
         });
     }
@@ -65,20 +92,6 @@ public class ConfirmPopWindow extends PopupWindow implements View.OnClickListene
         //弹窗位置设置
         showAsDropDown(view, Math.abs((view.getWidth() - getWidth()) / 2), 10);
         //showAtLocation(view, Gravity.TOP | Gravity.RIGHT, 10, 110);//有偏差
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ll_chat:
-                Toast.makeText(context, "发起群聊", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.ll_friend:
-                Toast.makeText(context, "添加好友", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
     }
 
 }

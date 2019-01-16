@@ -2,71 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="@color/gray858585"
-    android:layout_gravity="center_vertical"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
-    <CheckBox
-        android:id="@+id/ck_select"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <TextView
+        android:id="@+id/tv_task_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="invisible"/>
-    <TextView
-        android:id="@+id/tv_order_num"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:text="1"
-        android:gravity="center"
-        android:textSize="@dimen/sp15"
-        android:paddingHorizontal="@dimen/dp20"
-        android:textColor="@color/whiteFFF"/>
-    <TextView
-        android:id="@+id/tv_odd_num"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="match_parent"
-        android:text="232404584"
-        android:gravity="center"
-        android:textSize="@dimen/sp15"
-        android:textColor="@color/whiteFFF"/>
-    <TextView
-        android:id="@+id/tv_complete_rate"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="match_parent"
-        android:text="26/28"
-        android:textSize="@dimen/sp15"
-        android:gravity="center"
-        android:textColor="@color/whiteFFF"/>
-    <TextView
-        android:id="@+id/tv_urgen_sign"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="match_parent"
-        android:text="紧急"
-        android:textSize="@dimen/sp15"
-        android:gravity="center"
-        android:textColor="@color/whiteFFF"/>
-
-    <TextView
-        android:id="@+id/tv_project_time"
-        android:layout_width="0dp"
-        android:layout_weight="3"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="2018-28-28"
-        android:textSize="@dimen/sp15"
-        android:textColor="@color/whiteFFF"/>
-
-    <ImageView
-        android:id="@+id/iv_print"
-        android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/area_bg"
-        android:layout_gravity="center"
-        android:layout_marginRight="@dimen/dp20"
-        android:visibility="visible"/>
+        android:text="发起群聊"
+        android:textColor="@color/whiteFFF"
+        android:textSize="16sp" />
 
 </LinearLayout>

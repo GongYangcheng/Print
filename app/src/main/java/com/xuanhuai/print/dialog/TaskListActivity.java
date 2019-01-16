@@ -186,16 +186,13 @@ public class TaskListActivity extends AppCompatActivity {
 //            private ImageView iv_print;
 //        }
 //    }
-    /**
-     * 删除按钮的监听接口
-     */
-    public interface onItemDeleteListener {
-        void onDeleteClick(int i);
-    }
-
-    private onItemDeleteListener mOnItemDeleteListener;
-
-    public void setOnItemDeleteClickListener(onItemDeleteListener mOnItemDeleteListener) {
-        this.mOnItemDeleteListener = mOnItemDeleteListener;
-    }
+//    public interface onItemDeleteListener {
+//        void onDeleteClick(int i);
+//    }
+//
+//    private onItemDeleteListener mOnItemDeleteListener;
+//
+//    public void setOnItemDeleteClickListener(onItemDeleteListener mOnItemDeleteListener) {
+//        this.mOnItemDeleteListener = mOnItemDeleteListener;
+//    }
 }
