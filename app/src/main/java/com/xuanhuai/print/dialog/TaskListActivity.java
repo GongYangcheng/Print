@@ -8,31 +8,76 @@ import android.view.View;
 import android.widget.Button;
 
 import com.xuanhuai.print.R;
+import com.xuanhuai.print.utils.CustomToast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskListActivity extends AppCompatActivity {
 
     private static final String TAG = "TaskListActivity";
-    private HorizontalListView listView;
     private Context mContext;
-    private List<Moudle> baseArrayList;
-//    private MyBaseAdapter myBaseAdapter;
-    private int indexPosition = 0;
-
+    private ArrayList<Moudle> baseArrayList;
+//    String jsonText = "{" +
+//            "[{\"01\":\"合并任务\",\"02\":\"拆分任务\",\"03\":\"取消任务\"," + "\"04\":\"打印标签\",\"05\":\"查看缺货\"}]," +
+//            "[{\"01\":\"打印物料\",\"02\":\"查看缺货\",\"03\":\"取消任务\"," +
+//            "\"04\":\"打印标签\"}]," +
+//            "[{\"01\":\"打印打算\",\"02\":\"查看缺货\",\"03\":\"取消任务\"}]," +
+//            "[{\"01\":\"大数据库\",\"02\":\"疏塞数数\",\"03\":\"无额度诶\"}]" +
+//            "}";
+    String jsonText = "[" + "{\"01\":\"合并任务\",\"02\":\"拆分任务\",\"03\":\"取消任务\"," +
+            "\"04\":\"打印标签\",\"05\":\"查看缺货\"}," +
+            "{\"01\":\"打印物料\",\"02\":\"查看缺货\",\"03\":\"取消任务\"," +
+            "\"04\":\"打印标签\"}," +
+            "{\"01\":\"打印打算\",\"02\":\"查看缺货\",\"03\":\"取消任务\"}," +
+            "{\"01\":\"大数据库\",\"02\":\"疏塞数数\",\"03\":\"无额度诶\"}" +
+            "]";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_layout);
         mContext = this;
+        baseArrayList = new ArrayList<>();
+        initBaseData();
+
         Button btn = findViewById(R.id.btn_dialog);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TaskListDialog tld = new TaskListDialog(mContext);
+                TaskListDialog tld = new TaskListDialog(mContext, baseArrayList);
                 tld.show();
+                tld.setMenuClickListener(new TaskListDialog.OnMenuClickListener() {
+                    @Override
+                    public void onMenuClick(int position, View view) {
+                        JSONArray jsonArr = null;
+                        try {
+                            jsonArr = new JSONArray(jsonText);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        ConfirmPopWindow cpw = null;
+                        try {
+                            cpw = new ConfirmPopWindow(mContext, (JSONObject) jsonArr.get(position));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        cpw.showAtBottom(view);
+                        cpw.setOnItemContextClickListener(new ConfirmPopWindow.onItemContentListener() {
+                            @Override
+                            public void onContentClick(String text) {
+//                               text = value值
+                                CustomToast.showToastTest(mContext, text);
+                            }
+                        });
+                    }
+                });
             }
         });
+
 //        baseArrayList = new ArrayList<>();
 //        initBaseData();
 //        listView = findViewById(R.id.lv_btn_list);
@@ -106,13 +151,13 @@ public class TaskListActivity extends AppCompatActivity {
 
     }
 
-//    private void initBaseData() {
-////        模拟Viewpager内部的数据；
-//        for (int i = 0 ; i < 18 ; i++ ){
-//            baseArrayList.add(new Moudle("1","1","2564852"
-//            ,"25/36","紧急","2018-06-12","1"));
-//        }
-//    }
+    private void initBaseData() {
+//        模拟Viewpager内部的数据；
+        for (int i = 0; i < 18; i++) {
+            baseArrayList.add(new Moudle("0", "1", "2564852"
+                    , "25/36", "紧急", "2018-06-12 23:59", "1"));
+        }
+    }
 
 //    class MyBaseAdapter extends BaseAdapter{
 //

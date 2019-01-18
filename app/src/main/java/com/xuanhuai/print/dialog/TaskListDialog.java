@@ -7,19 +7,15 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.xuanhuai.print.R;
 import com.xuanhuai.print.utils.CustomToast;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,10 +33,38 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
     private ListView pagerListView;
     private TaskListDialog taskListDialog;
 
-    public TaskListDialog(@NonNull Context context) {
+
+    private OnSingleClickListener onSingleClickListener;
+    private OnDoubleClickListener onDoubleClickListener;
+    public OnMenuClickListener onMenuClickListener;
+    public void setSingleClickListener(OnSingleClickListener onSingleClickListener){
+        this.onSingleClickListener = onSingleClickListener;
+    }
+
+    public void setDoubleClickListener(OnDoubleClickListener onDoubleClickListener){
+        this.onDoubleClickListener = onDoubleClickListener;
+    }
+
+    public void setMenuClickListener(OnMenuClickListener onMenuClickListener){
+        this.onMenuClickListener = onMenuClickListener;
+    }
+
+    public interface OnSingleClickListener{
+        public void onSingleClick(String billNum);//单号  或 所有数据看定义；
+    }
+    public interface OnDoubleClickListener{
+        public void onDoubleClick(String billNum);//单号  或 所有数据看定义；
+    }
+
+    public interface OnMenuClickListener{
+        public void onMenuClick(int position,View view);//单号  或 所有数据看定义；
+    }
+
+    public TaskListDialog(@NonNull Context context,List<Moudle> baseArrayList) {
         super(context, R.style.MyDialog);
         mContext = context;
         taskListDialog = this;
+        this.baseArrayList = baseArrayList;
     }
 
     @Override
@@ -72,8 +96,6 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
     private void initView() {
         listView = findViewById(R.id.lv_btn_list);
         pagerListView = findViewById(R.id.list_tasks);
-        baseArrayList = new ArrayList<>();
-        initBaseData();
         myBaseAdapter = new MyBaseAdapter(indexPosition);//TODO 更改position
         pagerListView.setAdapter(myBaseAdapter);
         taskTitle = new String[]{"普通任务", "波次任务", "手动合任务", "智能合任务"};
@@ -110,12 +132,14 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
                 long time = System.currentTimeMillis();
                 if (time - lastClickTime > 0 && time - lastClickTime < 500) {
 //                      双击操作
-                    CustomToast.showToastTest(mContext, "双击" + position + "条目");
+//                    CustomToast.showToastTest(mContext, "双击" + position + "条目");
+                    onDoubleClickListener.onDoubleClick(baseArrayList.get(position).getTv_odd_num());
                 } else {
 //                  单击-> 进入下个dialog
                     lastClickTime = time;
                     taskListDialog.dismiss();
-                    CustomToast.showToastTest(mContext, "点击" + position + "条目");
+                    onSingleClickListener.onSingleClick(baseArrayList.get(position).getTv_odd_num());//给单号或者给JSON
+//                    CustomToast.showToastTest(mContext, "点击" + position + "条目");
                 }
             }
         });
@@ -131,18 +155,8 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
 
     boolean isDisplayCheckBox = false;
 
-    private void initBaseData() {
-//        模拟Viewpager内部的数据；
-        for (int i = 0; i < 18; i++) {
-            baseArrayList.add(new Moudle("0", "1", "2564852"
-                    , "25/36", "紧急", "2018-06-12 23:59", "1"));
-        }
-    }
-        String[][] taskContent = {
-            {"合并任务","拆分任务","取消任务","打印标签","查看缺货"},
-            {"取消任务","打印物料","查看缺货"},
-            {"取消任务","拆分任务"},
-            {"取消任务","打印物料","查看缺货","取消任务"}};
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -152,15 +166,8 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
                 break;
             case R.id.iv_select_menu:
 //                小菜单选项 TODO
-                final ConfirmPopWindow tld = new ConfirmPopWindow(mContext,taskContent[indexPosition]);
-                tld.showAtBottom(iv_select_menu);
-                tld.setOnItemContextClickListener(new ConfirmPopWindow.onItemContentListener() {
-                    @Override
-                    public void onContentClick(String text) {
-                        CustomToast.showToastTest(mContext,text);
-                        tld.dismiss();
-                    }
-                });
+                onMenuClickListener.onMenuClick(indexPosition,iv_select_menu);
+
                 break;
         }
     }
@@ -215,7 +222,7 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
 
         int pagerPosition;
         // 用来控制CheckBox的选中状况
-        private HashMap<Integer, Boolean> isSelected;
+        public HashMap<Integer, Boolean> isSelected;
 
         public MyBaseAdapter(int position) {
             this.pagerPosition = position;
@@ -280,6 +287,7 @@ public class TaskListDialog extends Dialog implements View.OnClickListener {
                 vh.ck_select.setVisibility(View.GONE);
 //                隐藏之后都设置未选中
                 vh.ck_select.setChecked(false);
+                getIsSelected().clear();
             }
 //            记录选中状态；
             vh.tv_order_num.setText((position + 1) + "");
